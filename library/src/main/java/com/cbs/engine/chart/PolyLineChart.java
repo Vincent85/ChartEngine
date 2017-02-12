@@ -2,9 +2,10 @@ package com.cbs.engine.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 
-import com.cbs.engine.renderer.LineChartRender;
+import com.cbs.engine.renderer.PolyLineChartRender;
 import com.cbs.engine.series.LineChartSeries;
 
 /**
@@ -15,42 +16,38 @@ import com.cbs.engine.series.LineChartSeries;
 
 public class PolyLineChart extends XYLineChart{
 
-    public PolyLineChart(LineChartSeries series, LineChartRender render) {
+    public PolyLineChart(LineChartSeries series, PolyLineChartRender render) {
         super(series, render);
     }
 
     @Override
     public void draw(Canvas canvas, Rect area, Paint paint) {
-        int[] margins = mRenderer.getmMargins();
-        int left = margins[0];
-        int top = margins[1];
-        int right = margins[2];
-        int bottom = margins[3];
+        super.draw(canvas, area, paint);
+        //todo 画数据线
+        int[] xValues = mSeries.getmXValues();
+        int[] yValues = mSeries.getmYValues();
 
-        int width = area.width();
-        int height = area.height();
+        int maxX = mSeries.getMaxX();
+        int minX = mSeries.getMinX();
+        int maxY = mSeries.getMaxY();
+        int minY = mSeries.getMinY();
 
-        if (mRenderer.isApplyBgColor()) {
-            drawBackgroundColor(canvas,mRenderer.getmBgColor());
+        if (xValues.length != yValues.length) {
+            throw new RuntimeException("series x values length must be equal with y values length");
         }
 
-        /**
-         * 绘制标题
-         */
-        int titleLeft = (int) ((width - paint.measureText(mRenderer.getmTitle())) / 2);
-        paint.setTextSize(mRenderer.getmTitleSize());
-        paint.setColor(mRenderer.getmTitleColor());
-        drawTitle(canvas, mRenderer.getmTitle(), Math.max(titleLeft, left), 30, paint);
-
-        /**
-         * todo 绘制x轴和y轴标题
-         */
-
-        /**
-         * 绘制x轴和y轴
-         */
-
-
+        Path path = new Path();
+        path.moveTo(convertToCoordinate(xValues[0], minX, maxX, getOrigin().x, getEndX().x),
+                convertToCoordinate(yValues[0], minY, maxY, getOrigin().y, getEndY().y));
+        for(int i=1; i<xValues.length; ++i) {
+            path.lineTo(convertToCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x),
+                    convertToCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y));
+        }
+        PolyLineChartRender render = (PolyLineChartRender) mRenderer;
+        paint.setStrokeWidth(render.getmLineWidth());
+        paint.setColor(render.getmLineColor());
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawPath(path,paint);
     }
 
 

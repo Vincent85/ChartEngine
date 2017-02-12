@@ -3,6 +3,8 @@ package com.cbs.engine.chart;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Rect;
+import android.text.TextPaint;
 
 import com.cbs.engine.renderer.LineChartRender;
 import com.cbs.engine.series.LineChartSeries;
@@ -16,6 +18,15 @@ public abstract class XYLineChart extends AbstractChart {
 
     protected LineChartSeries mSeries;
     protected LineChartRender mRenderer;
+
+    private int xGap;
+    private int yGap;
+    private int startTickX;
+    private int startTickY;
+
+    private Point origin;
+    private Point endX;
+    private Point endY;
 
     public XYLineChart(LineChartSeries series, LineChartRender render) {
         checkParameter(series,render);
@@ -75,7 +86,7 @@ public abstract class XYLineChart extends AbstractChart {
      * @param baseY  y基线坐标
      * @param paint  画笔
      */
-    protected void drawXTitle(Canvas canvas, String title, int baseX, int baseY, Paint paint) {
+    protected void drawXTitle(Canvas canvas, String title, int baseX, int baseY, TextPaint paint) {
         canvas.drawText(title,baseX,baseY,paint);
     }
 
@@ -87,22 +98,90 @@ public abstract class XYLineChart extends AbstractChart {
      * @param baseY
      * @param paint
      */
-    protected void drawYTitle(Canvas canvas, String title, int baseX, int baseY, Paint paint) {
+    protected void drawYTitle(Canvas canvas, String title, int baseX, int baseY, TextPaint paint) {
         canvas.drawText(title,baseX,baseY,paint);
     }
 
     /**
-     * 绘制网格线
+     * 绘制x轴标签和钩子
+     * @param canvas            画布
+     * @param xLabels           标签字符数组
+     * @param start             绘制开始坐标(标签文本基线坐标)
+     * @param end               绘制结束坐标(标签文本基线坐标)
+     * @param xLabelTickPadding x轴标签和钩子的间距
+     * @param textPaint        文本画笔
+     * @param drawTick         是否绘制“钩子”
+     * @param tickLength       钩子长度
+     * @param paint            钩子画笔
+     */
+    protected void drawXLabelsAndTicks(Canvas canvas, String[] xLabels, Point start, Point end,int xLabelTickPadding,
+                                       TextPaint textPaint, boolean drawTick, int tickLength, Paint paint) {
+        if (null == xLabels || xLabels.length == 0 || (end.x <= start.x)) {
+            return;
+        }
+        //todo 需要考虑标签画不下去的情况
+
+        int width = end.x - start.x;
+        xGap = width / (xLabels.length - 1);
+
+        startTickX = (int) (start.x - paint.getStrokeWidth() / 2);
+        for(int i=0; i<xLabels.length; ++i) {
+            if (drawTick) {
+                int beginX = startTickX + i * xGap;
+                int beginY = (int) (start.y + textPaint.ascent() - xLabelTickPadding);
+                canvas.drawLine(beginX,beginY,
+                        beginX,beginY - tickLength,paint);
+            }
+            canvas.drawText(xLabels[i],startTickX + i * xGap - textPaint.measureText(xLabels[i]) / 2,
+                    start.y,textPaint);
+        }
+
+    }
+
+    /**
+     * 绘制y轴标签和钩子
      * @param canvas
-     * @param startX
-     * @param stepX
-     * @param xLength
-     * @param endX
-     * @param startY
-     * @param stepY
-     * @param yLength
-     * @param endY
+     * @param yLabels
+     * @param start              绘制“钩子”起始点，在屏幕下方
+     * @param end                绘制“钩子”结束点，在屏幕上方
+     * @param titleAxisPadding   y轴标题和y轴的间距
+     * @param textPaint
+     * @param drawTick
+     * @param tickLength
      * @param paint
+     */
+    protected void drawYLabelsAndTicks(Canvas canvas, String[] yLabels, Point start, Point end,int titleAxisPadding,
+                                       TextPaint textPaint, boolean drawTick, int tickLength, Paint paint) {
+        if (null == yLabels || yLabels.length == 0 || end.y >= start.y) {
+            return;
+        }
+        int height = start.y - end.y;
+        yGap = height / (yLabels.length - 1);
+
+        startTickY = (int) (start.y - paint.getStrokeWidth() / 2);
+        //钩子和标签的间距
+        int padding = 15;
+        int startTextY = (int) (start.y - paint.getStrokeWidth() / 2 - padding);
+        for(int i=0; i<yLabels.length; ++i) {
+            if (drawTick) {
+                canvas.drawLine(start.x - tickLength, startTickY - i * yGap, start.x, startTickY - i * yGap,paint);
+            }
+            canvas.drawText(yLabels[i],start.x - titleAxisPadding,startTextY + textPaint.descent() - i * yGap,textPaint);
+        }
+    }
+
+    /**
+     * 绘制网格线
+     * @param canvas    画布
+     * @param startX    纵向网格线左下第一个点坐标
+     * @param stepX     纵向网格线的间距
+     * @param xLength   纵向网格线的长度
+     * @param endX      纵向网格线右下点坐标
+     * @param startY    横向网格线坐上第一个点坐标
+     * @param stepY     横向网格线间距
+     * @param yLength   横向网格线长度
+     * @param endY      横向网格线左下点坐标
+     * @param paint     画笔
      */
     protected void drawGrid(Canvas canvas,Point startX, int stepX,int xLength, Point endX,
                             Point startY, int stepY,int yLength, Point endY,Paint paint) {
@@ -110,7 +189,7 @@ public abstract class XYLineChart extends AbstractChart {
             while (true) {
                 canvas.drawLine(startX.x, startX.y, startX.x, startX.y - xLength, paint);
                 startX.x += stepX;
-                if (startX.x >= endX.x) {
+                if (startX.x > endX.x) {
                     break;
                 }
             }
@@ -120,12 +199,156 @@ public abstract class XYLineChart extends AbstractChart {
             while (true) {
                 canvas.drawLine(startY.x, startY.y, startY.x + yLength, startY.y, paint);
                 startY.y += stepY;
-                if (startY.y >= endY.y) {
+                if (startY.y > endY.y) {
                     break;
                 }
             }
         }
     }
 
+    @Override
+    public void draw(Canvas canvas, Rect area, Paint paint) {
+        int[] margins = mRenderer.getmMargins();
+        int left = margins[0];
+        int top = margins[1];
+        int right = margins[2];
+        int bottom = margins[3];
 
+        int width = area.width();
+        int height = area.height();
+
+        TextPaint textPaint = mRenderer.getmTextPaint();
+
+        if (mRenderer.isApplyBgColor()) {
+            drawBackgroundColor(canvas,mRenderer.getmBgColor());
+        }
+
+        /**
+         * 绘制标题
+         */
+        textPaint.setTextSize(mRenderer.getmTitleSize());
+        textPaint.setColor(mRenderer.getmTitleColor());
+        int titleLeft = (int) ((width - textPaint.measureText(mRenderer.getmTitle())) / 2);
+        int titleBottom = (int) (top - textPaint.ascent() + textPaint.descent());
+        drawTitle(canvas, mRenderer.getmTitle(), titleLeft, (int) (top - textPaint.ascent()), textPaint);
+
+        /**
+         * 绘制x轴和y轴标题
+         */
+        textPaint.setTextSize(mRenderer.getmXtitleSize());
+        textPaint.setColor(mRenderer.getmXTitleColor());
+        int xTitleBaseX = (int) ((width - textPaint.measureText(mRenderer.getmXTitle())) / 2);
+        int xTitleBaseY = (int) (height - (bottom + textPaint.descent() + mRenderer.getmLegendHeight()));
+        drawXTitle(canvas, mRenderer.getmXTitle(), xTitleBaseX, xTitleBaseY, textPaint);
+
+        textPaint.setTextSize(mRenderer.getmYTitleSize());
+        textPaint.setColor(mRenderer.getmYTitleColor());
+        int yTitleBaseX = (int) (left - textPaint.ascent());
+        int yTitleBaseY = (int) ((height - textPaint.measureText(mRenderer.getmYTitle())) / 2);
+        //y轴标题需要逆时针旋转90度
+        canvas.save();
+        canvas.rotate(-90, yTitleBaseX, yTitleBaseY);
+        drawYTitle(canvas, mRenderer.getmYTitle(), yTitleBaseX, yTitleBaseY, textPaint);
+        canvas.restore();
+
+        /**
+         * 绘制x轴和y轴
+         */
+        origin = new Point();
+        origin.x = (int) (yTitleBaseX + textPaint.descent() + mRenderer.getmYTitleAxisPadding());
+        origin.y = (int) (xTitleBaseY - mRenderer.getmXTitleLabelPadding() - textPaint.descent() + textPaint.ascent()
+                - mRenderer.getmXLabelTickPadding() - mRenderer.getmTickLength());
+
+        endY = new Point();
+        endY.x = origin.x;
+        endY.y = titleBottom + mRenderer.getmTitleYAxisPadding();
+
+        endX = new Point();
+        endX.y = origin.y;
+        endX.x = width - right;
+        paint.setStrokeWidth(mRenderer.getmAxisWidth());
+        paint.setColor(mRenderer.getmAxisColor());
+        drawYAxis(canvas, origin, endY, paint);
+        drawXAxis(canvas, origin, endX, paint);
+
+        /**
+         * 绘制x轴和y轴标签
+         */
+        Point start = new Point();
+        start.x = origin.x + mRenderer.getmXFirstTickPadding();
+        start.y = (int) (origin.y + mRenderer.getmTickLength() + mRenderer.getmXLabelTickPadding() - textPaint.ascent());
+        Point end = new Point();
+        end.x = width - margins[2] - 40;
+        end.y = start.y;
+        paint.setStrokeWidth(mRenderer.getmTickWidth());
+        paint.setColor(mRenderer.getmTickColor());
+        drawXLabelsAndTicks(canvas,mSeries.getmXLabels(),start,end,mRenderer.getmXLabelTickPadding(),textPaint,true,mRenderer.getmTickLength(),paint);
+
+        Point yTickEnd = new Point();
+        yTickEnd.x = origin.x;
+        yTickEnd.y = endY.y + mRenderer.getmYLastTickPadding();
+        drawYLabelsAndTicks(canvas, mSeries.getmYLabels(), origin, yTickEnd, mRenderer.getmYTitleAxisPadding(),
+                textPaint, true, mRenderer.getmTickLength(), paint);
+
+        /**
+         * 绘制网格线
+         * todo 存在一个问题：当前网格起始坐标依赖于xy轴绘制标签时的计算
+         */
+        if (mRenderer.isGridShown()) {
+            Point xStartGrid = new Point();
+            xStartGrid.x = startTickX;
+            xStartGrid.y = origin.y;
+            Point xEndGrid = new Point();
+            xEndGrid.x = startTickX + (mSeries.getmXLabels().length - 1) * xGap;
+            xEndGrid.y = xStartGrid.y;
+
+            Point yEndGrid = new Point();
+            yEndGrid.x = origin.x;
+            yEndGrid.y = origin.y - yGap;
+            Point yStartGrid = new Point();
+            yStartGrid.x = origin.x;
+            yStartGrid.y = yEndGrid.y - (mSeries.getmYLabels().length - 2) * yGap;
+            paint.setStrokeWidth(mRenderer.getmGridWidth());
+            paint.setColor(mRenderer.getmGridColor());
+            drawGrid(canvas,xStartGrid,xGap,origin.y - endY.y,xEndGrid,yStartGrid,yGap,endX.x - origin.x,yEndGrid,paint);
+        }
+    }
+
+    /**
+     * 将数值转化为特定范围内的坐标值
+     * @param value
+     * @param min
+     * @param max
+     * @param leftValue  坐标左值
+     * @param rightValue 坐标右值
+     * @return
+     */
+    public float convertToCoordinate(int value, int min, int max,int leftValue,int rightValue) {
+        float ratio = (float) (value - min) / (max - min);
+        return  leftValue + (rightValue - leftValue) * ratio;
+    }
+
+    public Point getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(Point origin) {
+        this.origin = origin;
+    }
+
+    public Point getEndX() {
+        return endX;
+    }
+
+    public void setEndX(Point endX) {
+        this.endX = endX;
+    }
+
+    public Point getEndY() {
+        return endY;
+    }
+
+    public void setEndY(Point endY) {
+        this.endY = endY;
+    }
 }

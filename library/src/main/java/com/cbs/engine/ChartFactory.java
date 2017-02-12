@@ -2,8 +2,10 @@ package com.cbs.engine;
 
 import android.content.Context;
 
+import com.cbs.engine.chart.PointChart;
 import com.cbs.engine.chart.PolyLineChart;
-import com.cbs.engine.renderer.LineChartRender;
+import com.cbs.engine.renderer.PointChartRenderer;
+import com.cbs.engine.renderer.PolyLineChartRender;
 import com.cbs.engine.series.LineChartSeries;
 import com.cbs.engine.view.ChartView;
 
@@ -15,9 +17,15 @@ import com.cbs.engine.view.ChartView;
 
 public class ChartFactory {
 
-    public static ChartView getPolyLineChartView(Context context, LineChartSeries dataset, LineChartRender renderer) {
+    public static ChartView getPolyLineChartView(Context context, LineChartSeries dataset, PolyLineChartRender renderer) {
         PolyLineChart chart = new PolyLineChart(dataset, renderer);
         ChartView chartView = new ChartView(context, chart);
+        return chartView;
+    }
+
+    public static ChartView getPointChartView(Context context, LineChartSeries dataset, PointChartRenderer renderer) {
+        PointChart chart = new PointChart(dataset, renderer);
+        ChartView chartView = new ChartView(context,chart);
         return chartView;
     }
 }

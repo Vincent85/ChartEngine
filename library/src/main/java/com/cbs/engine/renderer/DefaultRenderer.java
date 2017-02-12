@@ -1,6 +1,7 @@
 package com.cbs.engine.renderer;
 
 import android.graphics.Color;
+import android.text.TextPaint;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ import java.util.List;
 
 public class DefaultRenderer {
 
-    private static final int DEFAULT_TITLE_SIZE = 40;
+    private static final int DEFAULT_TITLE_SIZE = 45;
     private static final int DEFAULT_LEGEND_SIZE = 25;
-
+    private static final int DEFAULT_LEGEND_HEIGHT = 60;
     /**
      * 是否使用自定义背景颜色
      */
@@ -49,6 +50,16 @@ public class DefaultRenderer {
      * 图例文本颜色
      */
     private int mLegendColor = Color.LTGRAY;
+
+    /**
+     * 图例区域高度
+     */
+    private int mLegendHeight = DEFAULT_LEGEND_HEIGHT;
+
+    /**
+     * 绘制文本的画笔
+     */
+    private TextPaint mTextPaint = new TextPaint();
 
     public boolean isApplyBgColor() {
         return isApplyBgColor;
@@ -112,5 +123,21 @@ public class DefaultRenderer {
 
     public void setmLegendColor(int mLegendColor) {
         this.mLegendColor = mLegendColor;
+    }
+
+    public int getmLegendHeight() {
+        return mLegendHeight;
+    }
+
+    public void setmLegendHeight(int mLegendHeight) {
+        this.mLegendHeight = mLegendHeight;
+    }
+
+    public TextPaint getmTextPaint() {
+        return mTextPaint;
+    }
+
+    public void setmTextPaint(TextPaint mTextPaint) {
+        this.mTextPaint = mTextPaint;
     }
 }
