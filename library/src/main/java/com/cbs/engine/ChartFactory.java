@@ -28,4 +28,6 @@ public class ChartFactory {
         ChartView chartView = new ChartView(context,chart);
         return chartView;
     }
+
+
 }

@@ -22,8 +22,8 @@ public class ChartActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        ChartView chartView = ChartFactory.getPolyLineChartView(this, generateSeries(), generateRender());
-        ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
+        ChartView chartView = ChartFactory.getPolyLineChartView(this, generateSeries(), generateRender());
+//        ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
         setContentView(chartView);
     }
 
@@ -31,14 +31,14 @@ public class ChartActivity extends Activity {
         String[] xLabels = new String[]{"1","2","Jan","4","five","6","7","8","9","10","11","12"};
         String[] yLabels = new String[]{"-30","very cold","-20","-10","0","10","Nice","30","40"};
         int[] xValues = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};
-        int[] yValues = new int[]{12,34,56,34,23,11,6,4,25,67,77,44};
+        int[] yValues = new int[]{12,34,56,34,23,11,6,10,25,67,77,44};
 //        Random random = new Random();
 //        for(int i=0; i<xValues.length; ++i) {
 //            xValues[i] = random.nextInt(100);
 //            yValues[i] = random.nextInt(100);
 //            Log.d(TAG, "x[" + i + "] = " + xValues[i] + ",y[" + i + "] = " + yValues[i]);
 //        }
-        LineChartSeries series = new LineChartSeries(xValues, yValues, xLabels, yLabels);
+        LineChartSeries series = new LineChartSeries(xValues, yValues, xLabels, yLabels,0,12,0,100);
         return series;
     }
 

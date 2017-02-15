@@ -38,6 +38,21 @@ public class LineChartSeries extends DefaultSeries{
         updateRange();
     }
 
+    public LineChartSeries(int[] xValues,int[] yValues,String[] xLabels,String[] yLabels,
+                           int xMin,int xMax,int yMin,int yMax) {
+        this(xValues, yValues, xLabels, yLabels);
+        checkParameter(xMin, xMax, yMin, yMax);
+    }
+
+    private void checkParameter(int xMin, int xMax, int yMin, int yMax) {
+        if (xMin > getMinX() || xMax < getMaxX() || yMin > getMinY() || yMax < getMaxY()) {
+            throw new RuntimeException("init x/y value range error");
+        }
+        setMinX(xMin);
+        setMaxX(xMax);
+        setMinY(yMin);
+        setMaxY(yMax);
+    }
 
     private void updateRange() {
         minX= Integer.MAX_VALUE;

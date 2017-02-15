@@ -37,11 +37,11 @@ public class PolyLineChart extends XYLineChart{
         }
 
         Path path = new Path();
-        path.moveTo(convertToCoordinate(xValues[0], minX, maxX, getOrigin().x, getEndX().x),
-                convertToCoordinate(yValues[0], minY, maxY, getOrigin().y, getEndY().y));
+        path.moveTo(convertToXCoordinate(xValues[0], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding()),
+                convertToYCoordinate(yValues[0], minY, maxY, getOrigin().y, getEndY().y));
         for(int i=1; i<xValues.length; ++i) {
-            path.lineTo(convertToCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x),
-                    convertToCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y));
+            path.lineTo(convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding()),
+                    convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y));
         }
         PolyLineChartRender render = (PolyLineChartRender) mRenderer;
         paint.setStrokeWidth(render.getmLineWidth());

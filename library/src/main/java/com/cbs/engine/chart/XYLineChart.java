@@ -21,7 +21,7 @@ public abstract class XYLineChart extends AbstractChart {
 
     private int xGap;
     private int yGap;
-    private int startTickX;
+//    private int startTickX;
     private int startTickY;
 
     private Point origin;
@@ -122,17 +122,17 @@ public abstract class XYLineChart extends AbstractChart {
         //todo 需要考虑标签画不下去的情况
 
         int width = end.x - start.x;
-        xGap = width / (xLabels.length - 1);
+        xGap = width / xLabels.length;
 
-        startTickX = (int) (start.x - paint.getStrokeWidth() / 2);
+//        startTickX = (int) (start.x - paint.getStrokeWidth() / 2);
         for(int i=0; i<xLabels.length; ++i) {
             if (drawTick) {
-                int beginX = startTickX + i * xGap;
+                int beginX = start.x + (i + 1) * xGap;
                 int beginY = (int) (start.y + textPaint.ascent() - xLabelTickPadding);
                 canvas.drawLine(beginX,beginY,
                         beginX,beginY - tickLength,paint);
             }
-            canvas.drawText(xLabels[i],startTickX + i * xGap - textPaint.measureText(xLabels[i]) / 2,
+            canvas.drawText(xLabels[i],start.x + (i + 1) * xGap - textPaint.measureText(xLabels[i]) / 2,
                     start.y,textPaint);
         }
 
@@ -274,32 +274,34 @@ public abstract class XYLineChart extends AbstractChart {
         /**
          * 绘制x轴和y轴标签
          */
-        Point start = new Point();
-        start.x = origin.x + mRenderer.getmXFirstTickPadding();
-        start.y = (int) (origin.y + mRenderer.getmTickLength() + mRenderer.getmXLabelTickPadding() - textPaint.ascent());
-        Point end = new Point();
-        end.x = width - margins[2] - 40;
-        end.y = start.y;
-        paint.setStrokeWidth(mRenderer.getmTickWidth());
-        paint.setColor(mRenderer.getmTickColor());
-        drawXLabelsAndTicks(canvas,mSeries.getmXLabels(),start,end,mRenderer.getmXLabelTickPadding(),textPaint,true,mRenderer.getmTickLength(),paint);
-
-        Point yTickEnd = new Point();
-        yTickEnd.x = origin.x;
-        yTickEnd.y = endY.y + mRenderer.getmYLastTickPadding();
-        drawYLabelsAndTicks(canvas, mSeries.getmYLabels(), origin, yTickEnd, mRenderer.getmYTitleAxisPadding(),
-                textPaint, true, mRenderer.getmTickLength(), paint);
-
+        if(null != mSeries.getmXLabels() && mSeries.getmXLabels().length != 0) {
+            Point start = new Point();
+            start.x = origin.x + mRenderer.getmXFirstTickPadding();
+            start.y = (int) (origin.y + mRenderer.getmTickLength() + mRenderer.getmXLabelTickPadding() - textPaint.ascent());
+            Point end = new Point();
+            end.x = endX.x - mRenderer.getmGridRightPadding();
+            end.y = start.y;
+            paint.setStrokeWidth(mRenderer.getmTickWidth());
+            paint.setColor(mRenderer.getmTickColor());
+            drawXLabelsAndTicks(canvas, mSeries.getmXLabels(), start, end, mRenderer.getmXLabelTickPadding(), textPaint, true, mRenderer.getmTickLength(), paint);
+        }
+        if(null != mSeries.getmYLabels() && mSeries.getmYLabels().length != 0) {
+            Point yTickEnd = new Point();
+            yTickEnd.x = origin.x;
+            yTickEnd.y = endY.y + mRenderer.getmYLastTickPadding();
+            drawYLabelsAndTicks(canvas, mSeries.getmYLabels(), origin, yTickEnd, mRenderer.getmYTitleAxisPadding(),
+                    textPaint, true, mRenderer.getmTickLength(), paint);
+        }
         /**
          * 绘制网格线
          * todo 存在一个问题：当前网格起始坐标依赖于xy轴绘制标签时的计算
          */
         if (mRenderer.isGridShown()) {
             Point xStartGrid = new Point();
-            xStartGrid.x = startTickX;
+            xStartGrid.x = origin.x + xGap;
             xStartGrid.y = origin.y;
             Point xEndGrid = new Point();
-            xEndGrid.x = startTickX + (mSeries.getmXLabels().length - 1) * xGap;
+            xEndGrid.x = endX.x - mRenderer.getmGridRightPadding();
             xEndGrid.y = xStartGrid.y;
 
             Point yEndGrid = new Point();
@@ -315,7 +317,7 @@ public abstract class XYLineChart extends AbstractChart {
     }
 
     /**
-     * 将数值转化为特定范围内的坐标值
+     * 将数值转化为特定范围内的X坐标值
      * @param value
      * @param min
      * @param max
@@ -323,9 +325,14 @@ public abstract class XYLineChart extends AbstractChart {
      * @param rightValue 坐标右值
      * @return
      */
-    public float convertToCoordinate(int value, int min, int max,int leftValue,int rightValue) {
+    public float convertToXCoordinate(int value, int min, int max, int leftValue, int rightValue) {
         float ratio = (float) (value - min) / (max - min);
         return  leftValue + (rightValue - leftValue) * ratio;
+    }
+
+    public float convertToYCoordinate(int value,int min,int max,int bottomValue,int topValue) {
+        float ratio = (float) (value - min) / (max - min);
+        return bottomValue - (bottomValue - topValue) * ratio;
     }
 
     public Point getOrigin() {

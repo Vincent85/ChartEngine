@@ -40,5 +40,4 @@ public abstract class AbstractChart {
         canvas.drawText(title,left,top,paint);
     }
 
-
 }

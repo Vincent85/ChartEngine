@@ -18,8 +18,9 @@ public class LineChartRender extends DefaultRenderer {
     private static final int DEFAULT_XTITLE_TICK_PADDING = 15;
     private static final int DEFAULT_XTITLE_LABEL_PADDING = 60;
     private static final int DEFAULT_TITLE_YAXIS_PADDING = 25;
-    private static final int DEFAULT_X_FIRST_TICK_PADDING = 60;
+    private static final int DEFAULT_X_FIRST_TICK_PADDING = 0;
     private static final int DEFAULT_Y_LAST_TICK_PADDING = 50;
+    private static final int DEFAULT_RIGHT_GRID_PADDING = 60;
 
     /**
      * x轴标题
@@ -100,6 +101,11 @@ public class LineChartRender extends DefaultRenderer {
     private int mTitleYAxisPadding = DEFAULT_TITLE_YAXIS_PADDING;
 
     private int mXFirstTickPadding = DEFAULT_X_FIRST_TICK_PADDING;
+
+    /**
+     * 最右端网格线内间距
+     */
+    private int mGridRightPadding = DEFAULT_RIGHT_GRID_PADDING;
 
     /**
      * y轴最上面的tick和y轴顶部间距
@@ -296,5 +302,13 @@ public class LineChartRender extends DefaultRenderer {
 
     public void setmAxisColor(int mAxisColor) {
         this.mAxisColor = mAxisColor;
+    }
+
+    public int getmGridRightPadding() {
+        return mGridRightPadding;
+    }
+
+    public void setmGridRightPadding(int mGridRightPadding) {
+        this.mGridRightPadding = mGridRightPadding;
     }
 }

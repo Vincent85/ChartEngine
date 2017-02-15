@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.cbs.engine.chart.AbstractChart;
+import com.cbs.engine.util.SystemUtil;
 
 /**
  * date: 2017/2/11 0011
@@ -15,6 +16,9 @@ import com.cbs.engine.chart.AbstractChart;
  */
 
 public class ChartView extends View {
+
+    private static final int DEFAULT_MARGIN_DIP = 10;
+    private int mDefaultMargin = 0;
 
     private AbstractChart mChart;
     private Paint mPaint;
@@ -27,19 +31,24 @@ public class ChartView extends View {
         super(context, attrs);
         mChart = chart;
 
+        init();
+    }
+
+    private void init() {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
 
+        mDefaultMargin = SystemUtil.dip2px(getContext(), DEFAULT_MARGIN_DIP);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         Rect area = new Rect();
-        area.left = 10;
-        area.top = 10;
-        area.right = area.left + getWidth();
-        area.bottom = area.top + getHeight();
+        area.left = mDefaultMargin;
+        area.top = mDefaultMargin;
+        area.right = getWidth() - mDefaultMargin;
+        area.bottom = getHeight() - mDefaultMargin;
         mChart.draw(canvas,area,mPaint);
     }
 }

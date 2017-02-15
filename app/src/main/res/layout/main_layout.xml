@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/point_btn"
+        style="@style/button"
+        android:text="@string/point_chart"/>
+
+    <Button
+        android:id="@+id/polyline_btn"
+        style="@style/button"
+        android:text="@string/polyline_chart"/>
+
+    <Button
+        android:id="@+id/bar_btn"
+        style="@style/button"
+        android:text="@string/bar_chart"/>
+
+    <Button
+        android:id="@+id/pie_btn"
+        style="@style/button"
+        android:text="@string/pie_chart"/>
+</LinearLayout>

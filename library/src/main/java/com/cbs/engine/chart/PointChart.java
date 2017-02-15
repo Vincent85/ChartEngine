@@ -15,6 +15,8 @@ import com.cbs.engine.series.LineChartSeries;
 
 public class PointChart extends XYLineChart {
 
+    public static final String TAG = "PointChart";
+
     public PointChart(LineChartSeries series, PointChartRenderer render) {
         super(series, render);
     }
@@ -38,9 +40,9 @@ public class PointChart extends XYLineChart {
         PointChartRenderer renderer = (PointChartRenderer) getmRenderer();
         paint.setColor(renderer.getmPointColor());
         paint.setStyle(Paint.Style.FILL);
-        for(int i=1; i<xValues.length; ++i) {
-            canvas.drawCircle(convertToCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x),
-                    convertToCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y), renderer.getmRadius(), paint);
+        for(int i=0; i<xValues.length; ++i) {
+            canvas.drawCircle(convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding()),
+                    convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y), renderer.getmRadius(), paint);
         }
 
     }

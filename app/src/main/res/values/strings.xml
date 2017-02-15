@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">app</string>
+    
+    <string name="point_chart">点状图表</string>
+    <string name="polyline_chart">折线图表</string>
+    <string name="bar_chart">柱状图表</string>
+
+    <string name="pie_chart">饼图</string>
 </resources>
