@@ -24,19 +24,11 @@ public class PointChart extends XYLineChart {
     @Override
     public void draw(Canvas canvas, Rect area, Paint paint) {
         super.draw(canvas, area, paint);
+
+        initSeriesRange();
+        validateSeries();
+
         //画数据点
-        int[] xValues = mSeries.getmXValues();
-        int[] yValues = mSeries.getmYValues();
-
-        int maxX = mSeries.getMaxX();
-        int minX = mSeries.getMinX();
-        int maxY = mSeries.getMaxY();
-        int minY = mSeries.getMinY();
-
-        if (xValues.length != yValues.length) {
-            throw new RuntimeException("series x values length must be equal with y values length");
-        }
-
         PointChartRenderer renderer = (PointChartRenderer) getmRenderer();
         paint.setColor(renderer.getmPointColor());
         paint.setStyle(Paint.Style.FILL);

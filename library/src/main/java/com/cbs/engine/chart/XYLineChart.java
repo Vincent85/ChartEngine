@@ -28,6 +28,14 @@ public abstract class XYLineChart extends AbstractChart {
     private Point endX;
     private Point endY;
 
+    protected int[] xValues;
+    protected int[] yValues;
+
+    protected int maxX;
+    protected int minX;
+    protected int maxY;
+    protected int minY;
+
     public XYLineChart(LineChartSeries series, LineChartRender render) {
         checkParameter(series,render);
         setmSeries(series);
@@ -335,6 +343,31 @@ public abstract class XYLineChart extends AbstractChart {
         return bottomValue - (bottomValue - topValue) * ratio;
     }
 
+    /**
+     * 初始化x/y轴数据及数据边界范围
+     */
+    protected void initSeriesRange() {
+        xValues = mSeries.getmXValues();
+        yValues = mSeries.getmYValues();
+
+        maxX = mSeries.getMaxX();
+        minX = mSeries.getMinX();
+        maxY = mSeries.getMaxY();
+        minY = mSeries.getMinY();
+    }
+
+    /**
+     * 验证x/y轴数据有效性
+     */
+    protected void validateSeries() {
+        if(null == xValues || xValues.length == 0 || null == yValues || yValues.length == 0) {
+            throw new RuntimeException("xValues and yValues mustn't be null or empty");
+        }
+        if (xValues.length != yValues.length) {
+            throw new RuntimeException("series x values length must be equal with y values length");
+        }
+    }
+
     public Point getOrigin() {
         return origin;
     }
@@ -357,5 +390,9 @@ public abstract class XYLineChart extends AbstractChart {
 
     public void setEndY(Point endY) {
         this.endY = endY;
+    }
+
+    public int getxGap() {
+        return xGap;
     }
 }
