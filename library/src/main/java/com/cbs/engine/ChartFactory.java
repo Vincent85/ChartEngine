@@ -3,12 +3,15 @@ package com.cbs.engine;
 import android.content.Context;
 
 import com.cbs.engine.chart.BarChart;
+import com.cbs.engine.chart.PieChart;
 import com.cbs.engine.chart.PointChart;
 import com.cbs.engine.chart.PolyLineChart;
 import com.cbs.engine.renderer.BarChartRenderer;
+import com.cbs.engine.renderer.PieChartRenderer;
 import com.cbs.engine.renderer.PointChartRenderer;
 import com.cbs.engine.renderer.PolyLineChartRender;
 import com.cbs.engine.series.LineChartSeries;
+import com.cbs.engine.series.PieChartSeries;
 import com.cbs.engine.view.ChartView;
 
 /**
@@ -54,6 +57,19 @@ public class ChartFactory {
      */
     public static ChartView getBarChartView(Context context, LineChartSeries dataset, BarChartRenderer renderer) {
         BarChart chart = new BarChart(dataset, renderer);
+        ChartView chartView = new ChartView(context, chart);
+        return chartView;
+    }
+
+    /**
+     * 生成饼图图表
+     * @param context
+     * @param dataset
+     * @param renderer
+     * @return
+     */
+    public static ChartView getPieChartView(Context context, PieChartSeries dataset, PieChartRenderer renderer) {
+        PieChart chart = new PieChart(dataset, renderer);
         ChartView chartView = new ChartView(context, chart);
         return chartView;
     }

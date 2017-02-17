@@ -6,9 +6,11 @@ import android.os.Bundle;
 
 import com.cbs.engine.ChartFactory;
 import com.cbs.engine.renderer.BarChartRenderer;
+import com.cbs.engine.renderer.PieChartRenderer;
 import com.cbs.engine.renderer.PointChartRenderer;
 import com.cbs.engine.renderer.PolyLineChartRender;
 import com.cbs.engine.series.LineChartSeries;
+import com.cbs.engine.series.PieChartSeries;
 import com.cbs.engine.util.SystemUtil;
 import com.cbs.engine.view.ChartView;
 
@@ -25,7 +27,8 @@ public class ChartActivity extends Activity {
 
 //        ChartView chartView = ChartFactory.getPolyLineChartView(this, generateSeries(), generateRender());
 //        ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
-        ChartView chartView = ChartFactory.getBarChartView(this, generateSeries(), generateBarChartRenderer());
+//        ChartView chartView = ChartFactory.getBarChartView(this, generateSeries(), generateBarChartRenderer());
+        ChartView chartView = ChartFactory.getPieChartView(this, generatePieChartSeries(), generatePieChartRenderer());
         setContentView(chartView);
     }
 
@@ -76,6 +79,22 @@ public class ChartActivity extends Activity {
         renderer.setmYTitle("我是y轴");
 
         renderer.setmBarWidth(SystemUtil.dip2px(this, 120));
+        return renderer;
+    }
+
+    private PieChartSeries generatePieChartSeries() {
+        int[] values = new int[]{2, 3, 6, 1, 8};
+        return new PieChartSeries(values);
+    }
+    private PieChartRenderer generatePieChartRenderer() {
+        PieChartRenderer renderer = new PieChartRenderer();
+
+        renderer.setApplyBgColor(true);
+        renderer.setmBgColor(Color.BLACK);
+        renderer.setmTitle("Monthly temperature");
+        renderer.setmLegendHeight(SystemUtil.dip2px(this,50));
+        renderer.setmRadius(SystemUtil.dip2px(this,300));
+        renderer.setmStartAngle(-90);
         return renderer;
     }
 }
