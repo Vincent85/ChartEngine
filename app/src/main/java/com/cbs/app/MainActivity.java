@@ -1,6 +1,7 @@
 package com.cbs.app;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -39,8 +40,28 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+        int type ;
         switch (v.getId()) {
-
+            case R.id.point_btn:
+                type = ChartActivity.POINT;
+                break;
+            case R.id.polyline_btn:
+                type = ChartActivity.POLYLINE;
+                break;
+            case R.id.bar_btn:
+                type = ChartActivity.BAR;
+                break;
+            case R.id.pie_btn:
+                type = ChartActivity.PIE;
+                break;
+            default :
+                type = ChartActivity.POINT;
+                break;
         }
+        Intent intent = new Intent(this, ChartActivity.class);
+        intent.putExtra(ChartActivity.TYPE_KEY, type);
+        startActivity(intent);
     }
+
+
 }

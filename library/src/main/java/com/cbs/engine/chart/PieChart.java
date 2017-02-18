@@ -2,6 +2,7 @@ package com.cbs.engine.chart;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.text.TextPaint;
@@ -51,7 +52,7 @@ public class PieChart extends AbstractChart {
         drawTitle(canvas, mRenderer.getmTitle(), titleLeft, titleBottom, textPaint);
 
         /**
-         * 绘制饼图
+         * 绘制饼图,标签
          */
         float centerX = left + width / 2;
         float centerY = titleBottom + textPaint.descent() + (bottom - titleBottom - textPaint.descent() - mRenderer.getmLegendHeight()) / 2;
@@ -65,12 +66,57 @@ public class PieChart extends AbstractChart {
         paint.setStyle(Paint.Style.FILL);
         int[] values = mSeries.getmPercents();
         float startAngle = mRenderer.getmStartAngle();
+        RectF rectF = new RectF(leftEdge,topEdge,rightEdge,bottomEdge);
+        /**
+         * 标签折线坐标点
+         */
+        Point start = new Point();
+        Point middle = new Point();
+        Point end = new Point();
         for(int i=0; i<values.length; ++i) {
             paint.setColor(getArcFillColor(mRenderer.getmFillColors()));
             float sweepAngle = convertToAngle(values[i]);
-            canvas.drawArc(new RectF(leftEdge, topEdge, rightEdge, bottomEdge),startAngle, sweepAngle, true, paint);
+            canvas.drawArc(rectF,startAngle, sweepAngle, true, paint);
+            /**
+             * 绘制标签
+             */
+            double centerAngle = degree2radian(startAngle + sweepAngle / 2);
+
+            start.x = (int) (centerX + mRenderer.getmLineRadiusPadding() * Math.cos(centerAngle));
+            start.y = (int) (centerY + mRenderer.getmLineRadiusPadding() * Math.sin(centerAngle));
+            middle.x = (int) (start.x + mRenderer.getmLabelLineLength1() * Math.cos(centerAngle));
+            middle.y = (int) (start.y + mRenderer.getmLabelLineLength1() * Math.sin(centerAngle));
+
+            //标签文本开始基线坐标
+            int baseX;
+            int baseY;
+            String label = mSeries.getmLabels()[i];
+            textPaint.setTextSize(mRenderer.getmLabelTextSize());
+            textPaint.setColor(mRenderer.getmLabelTextColor());
+            int labelLength = (int)textPaint.measureText(label, 0, label.length());
+
+            if (centerAngle >= (Math.PI / 2) && centerAngle <= (Math.PI * 3 / 2)) {
+                baseX = Math.max(left,middle.x - mRenderer.getmLabelLineRightPadding() - labelLength);
+                end.x = baseX;
+                end.y = middle.y;
+            }else {
+                baseX = middle.x + mRenderer.getmLabelLineRightPadding();
+                end.x = baseX + labelLength;
+                end.y = middle.y;
+            }
+            baseY = (int)(middle.y - mRenderer.getmLabelLineBottomPadding() - textPaint.descent());
+
+            paint.setStrokeWidth(mRenderer.getmLabelLineWidth());
+            paint.setColor(mRenderer.getmLabelLineColor());
+            canvas.drawLine(start.x, start.y, middle.x, middle.y, paint);
+            canvas.drawLine(middle.x, middle.y, end.x, end.y, paint);
+
+            canvas.drawText(label,baseX,baseY,textPaint);
+
             startAngle += sweepAngle;
         }
+
+
     }
 
     /**
@@ -81,8 +127,8 @@ public class PieChart extends AbstractChart {
      * @return
      */
     private int getValidRadius(int width,int heigth,int radius) {
-        int maxRadius = (int) (Math.min(width,heigth) / 2.5);
-        int minRadius = Math.min(width,heigth) / 4;
+        int maxRadius = Math.min(width,heigth) / 3;
+        int minRadius = Math.min(width,heigth) / 6;
 
         return Math.min(maxRadius, Math.max(radius, minRadius));
     }
@@ -100,5 +146,14 @@ public class PieChart extends AbstractChart {
             index = 0;
         }
         return colors[index++];
+    }
+
+    /**
+     * 角度转为弧度
+     * @param degree
+     * @return
+     */
+    private double degree2radian(float degree) {
+        return Math.PI * 2 * (degree / 360);
     }
 }

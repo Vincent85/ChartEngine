@@ -21,17 +21,35 @@ import com.cbs.engine.view.ChartView;
 
 public class ChartActivity extends Activity {
 
+    public static final int POLYLINE = 0;
+    public static final int POINT = 1;
+    public static final int BAR = 2;
+    public static final int PIE = 3;
+
+    public static final String TYPE_KEY = "chart_type";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        ChartView chartView = ChartFactory.getPolyLineChartView(this, generateSeries(), generateRender());
-//        ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
-//        ChartView chartView = ChartFactory.getBarChartView(this, generateSeries(), generateBarChartRenderer());
-        ChartView chartView = ChartFactory.getPieChartView(this, generatePieChartSeries(), generatePieChartRenderer());
-        setContentView(chartView);
+        int type = getIntent().getIntExtra(TYPE_KEY, POINT);
+
+        setContentView(getChartViewByType(type));
     }
 
+    private ChartView getChartViewByType(int type) {
+        ChartView chartView = null;
+        if (type == POINT) {
+            chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
+        } else if (type == POLYLINE) {
+            chartView = ChartFactory.getPolyLineChartView(this, generateSeries(), generateRender());
+        } else if (type == BAR) {
+            chartView = ChartFactory.getBarChartView(this, generateSeries(), generateBarChartRenderer());
+        } else if (type == PIE) {
+            chartView = ChartFactory.getPieChartView(this, generatePieChartSeries(), generatePieChartRenderer());
+        }
+        return chartView;
+    }
     private LineChartSeries generateSeries() {
         String[] xLabels = new String[]{"1","2","Jan","4","five","6","7","8","9","10","11","12"};
         String[] yLabels = new String[]{"-30","very cold","-20","-10","0","10","Nice","30","40"};
@@ -84,16 +102,17 @@ public class ChartActivity extends Activity {
 
     private PieChartSeries generatePieChartSeries() {
         int[] values = new int[]{2, 3, 6, 1, 8};
-        return new PieChartSeries(values);
+        String[] labels = new String[]{"一月份","二月份","三月份","四月份","五月份"};
+        return new PieChartSeries(values,labels);
     }
     private PieChartRenderer generatePieChartRenderer() {
-        PieChartRenderer renderer = new PieChartRenderer();
+        PieChartRenderer renderer = new PieChartRenderer(getApplicationContext());
 
         renderer.setApplyBgColor(true);
         renderer.setmBgColor(Color.BLACK);
         renderer.setmTitle("Monthly temperature");
         renderer.setmLegendHeight(SystemUtil.dip2px(this,50));
-        renderer.setmRadius(SystemUtil.dip2px(this,300));
+//        renderer.setmRadius(SystemUtil.dip2px(this,300));
         renderer.setmStartAngle(-90);
         return renderer;
     }
