@@ -12,4 +12,12 @@
  *通过设置Renderer打开/关闭显示动画
  
  基本示例截图如下所示：
+ *点状图表 <br />
+ ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/pointchart-1.gif) <br />
+ *折线图表 <br />
+ ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/polylinechart-1.gif) <br />
+ *柱状图表 <br />
+ ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/barchart-1.gif) <br />
+ *饼图
+ ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/PieChart.png)
  
