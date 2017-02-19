@@ -9,7 +9,7 @@ import com.cbs.engine.chart.PolyLineChart;
 import com.cbs.engine.renderer.BarChartRenderer;
 import com.cbs.engine.renderer.PieChartRenderer;
 import com.cbs.engine.renderer.PointChartRenderer;
-import com.cbs.engine.renderer.PolyLineChartRender;
+import com.cbs.engine.renderer.PolyLineChartRenderer;
 import com.cbs.engine.series.LineChartSeries;
 import com.cbs.engine.series.PieChartSeries;
 import com.cbs.engine.view.ChartView;
@@ -30,7 +30,7 @@ public class ChartFactory {
      * @param renderer
      * @return
      */
-    public static ChartView getPolyLineChartView(Context context, LineChartSeries dataset, PolyLineChartRender renderer) {
+    public static ChartView getPolyLineChartView(Context context, LineChartSeries dataset, PolyLineChartRenderer renderer) {
         PolyLineChart chart = new PolyLineChart(dataset, renderer);
         ChartView chartView = new ChartView(context, chart);
         return chartView;

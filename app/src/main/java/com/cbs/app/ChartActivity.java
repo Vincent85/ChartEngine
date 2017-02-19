@@ -8,7 +8,7 @@ import com.cbs.engine.ChartFactory;
 import com.cbs.engine.renderer.BarChartRenderer;
 import com.cbs.engine.renderer.PieChartRenderer;
 import com.cbs.engine.renderer.PointChartRenderer;
-import com.cbs.engine.renderer.PolyLineChartRender;
+import com.cbs.engine.renderer.PolyLineChartRenderer;
 import com.cbs.engine.series.LineChartSeries;
 import com.cbs.engine.series.PieChartSeries;
 import com.cbs.engine.util.SystemUtil;
@@ -59,8 +59,8 @@ public class ChartActivity extends Activity {
         return series;
     }
 
-    private PolyLineChartRender generateRender() {
-        PolyLineChartRender render = new PolyLineChartRender();
+    private PolyLineChartRenderer generateRender() {
+        PolyLineChartRenderer render = new PolyLineChartRenderer(getApplicationContext());
         render.setApplyBgColor(true);
         render.setmBgColor(Color.BLACK);
         render.setmTitle("Monthly temperature");
