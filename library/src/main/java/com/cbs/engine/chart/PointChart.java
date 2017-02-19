@@ -39,7 +39,7 @@ public class PointChart extends XYLineChart {
         TextPaint textPaint = new TextPaint();
         for(int i=0; i<xValues.length; ++i) {
             float centerX = convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding());
-            float centerY = convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y);
+            float centerY = convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY());
             canvas.drawCircle(centerX,centerY, renderer.getmRadius(), paint);
             /**
              * 绘制数值

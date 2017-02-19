@@ -23,6 +23,10 @@ public abstract class XYLineChart extends AbstractChart {
     private int yGap;
 //    private int startTickX;
     private int startTickY;
+    /**
+     * 最后一个“钩子”的y坐标
+     */
+    private int endTickY;
 
     private Point origin;
     private Point endX;
@@ -176,6 +180,7 @@ public abstract class XYLineChart extends AbstractChart {
             }
             canvas.drawText(yLabels[i],start.x - titleAxisPadding,startTextY + textPaint.descent() - i * yGap,textPaint);
         }
+        endTickY = startTickY - (yLabels.length - 1) * yGap;
     }
 
     /**
@@ -326,7 +331,7 @@ public abstract class XYLineChart extends AbstractChart {
 
     /**
      * 将数值转化为特定范围内的X坐标值
-     * @param value
+     * @param value      要转化的为坐标的数值
      * @param min
      * @param max
      * @param leftValue  坐标左值
@@ -394,5 +399,9 @@ public abstract class XYLineChart extends AbstractChart {
 
     public int getxGap() {
         return xGap;
+    }
+
+    public int getEndTickY() {
+        return endTickY;
     }
 }

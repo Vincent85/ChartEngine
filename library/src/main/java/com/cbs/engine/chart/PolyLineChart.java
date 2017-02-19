@@ -29,10 +29,10 @@ public class PolyLineChart extends XYLineChart{
 
         Path path = new Path();
         path.moveTo(convertToXCoordinate(xValues[0], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding()),
-                convertToYCoordinate(yValues[0], minY, maxY, getOrigin().y, getEndY().y));
+                convertToYCoordinate(yValues[0], minY, maxY, getOrigin().y, getEndTickY()));
         for(int i=1; i<xValues.length; ++i) {
             path.lineTo(convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding()),
-                    convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y));
+                    convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY()));
         }
         PolyLineChartRender render = (PolyLineChartRender) mRenderer;
         paint.setStrokeWidth(render.getmLineWidth());

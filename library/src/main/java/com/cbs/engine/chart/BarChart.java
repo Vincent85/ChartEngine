@@ -40,7 +40,7 @@ public class BarChart extends XYLineChart {
         rect.bottom = getOrigin().y;
         int y;
         for (int i=0; i<xValues.length; ++i) {
-            y = (int) convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndY().y);
+            y = (int) convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY());
             rect.left = getOrigin().x + (i + 1) * getxGap() - barWidth / 2;
             rect.right = getOrigin().x + (i + 1) * getxGap() + barWidth / 2;
             rect.top = y;
