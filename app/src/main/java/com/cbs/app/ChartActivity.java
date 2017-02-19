@@ -63,7 +63,7 @@ public class ChartActivity extends Activity {
         PolyLineChartRenderer render = new PolyLineChartRenderer(getApplicationContext());
         render.setApplyBgColor(true);
         render.setmBgColor(Color.BLACK);
-        render.setmTitle("Monthly temperature");
+        render.setmTitle("我是标题");
 
         render.setmXTitle("我是x轴");
         render.setmYTitle("我是y轴");
@@ -95,7 +95,6 @@ public class ChartActivity extends Activity {
 
         renderer.setmXTitle("我是x轴");
         renderer.setmYTitle("我是y轴");
-
         renderer.setmBarWidth(SystemUtil.dip2px(this, 120));
         return renderer;
     }
