@@ -60,6 +60,7 @@ public class PolyLineChartRenderer extends LineChartRender {
     private int mValueTextPointPadding;
 
     public PolyLineChartRenderer(Context context) {
+        super(context);
         mLineWidth = SystemUtil.dip2px(context, DEFAULT_LINE_WIDTH);
         mValuePointDimension = SystemUtil.dip2px(context, DEFAULT_VALUE_POINT_DIMEN);
 

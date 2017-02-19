@@ -49,6 +49,7 @@ public class ChartView extends View {
         area.top = mDefaultMargin;
         area.right = getWidth() - mDefaultMargin;
         area.bottom = getHeight() - mDefaultMargin;
-        mChart.draw(canvas,area,mPaint);
+        mChart.draw(canvas,this,area,mPaint);
+
     }
 }

@@ -3,10 +3,12 @@ package com.cbs.engine.chart;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.text.TextPaint;
 
 import com.cbs.engine.renderer.PointChartRenderer;
 import com.cbs.engine.series.LineChartSeries;
+import com.cbs.engine.view.ChartView;
 
 /**
  * date: 2017/2/12 0012
@@ -23,8 +25,8 @@ public class PointChart extends XYLineChart {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect area, Paint paint) {
-        super.draw(canvas, area, paint);
+    public void draw(Canvas canvas, ChartView parent, Rect area, Paint paint) {
+        super.draw(canvas,parent, area, paint);
 
         initSeriesRange();
         validateSeries();
@@ -34,12 +36,29 @@ public class PointChart extends XYLineChart {
          * 及文本
          */
         PointChartRenderer renderer = (PointChartRenderer) getmRenderer();
+
+        /**
+         * 数据点绘制的最高坐标值
+         */
+        int maxHeightValue = getEndTickY();
+
+        if (renderer.isAnimated()) {
+            if (!isAnimatedStart) {
+                mAnimatedStart = SystemClock.uptimeMillis();
+                mAnimatedEnd = mAnimatedStart + renderer.getmAnimatedDuration();
+                isAnimatedStart = true;
+            }
+            maxHeightValue = getAnimatedValue(renderer.getmAnimatedDuration(),
+                    SystemClock.uptimeMillis() - mAnimatedStart,
+                    getOrigin().y, getEndTickY());
+        }
+
         paint.setColor(renderer.getmPointColor());
         paint.setStyle(Paint.Style.FILL);
         TextPaint textPaint = new TextPaint();
         for(int i=0; i<xValues.length; ++i) {
             float centerX = convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding());
-            float centerY = convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY());
+            float centerY = convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, maxHeightValue);
             canvas.drawCircle(centerX,centerY, renderer.getmRadius(), paint);
             /**
              * 绘制数值
@@ -54,6 +73,9 @@ public class PointChart extends XYLineChart {
             }
         }
 
+        if (renderer.isAnimated() && SystemClock.uptimeMillis() <= mAnimatedEnd) {
+            parent.invalidate();
+        }
     }
 
 }

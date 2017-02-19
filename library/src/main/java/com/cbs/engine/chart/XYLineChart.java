@@ -8,6 +8,7 @@ import android.text.TextPaint;
 
 import com.cbs.engine.renderer.LineChartRender;
 import com.cbs.engine.series.LineChartSeries;
+import com.cbs.engine.view.ChartView;
 
 /**
  * date: 2017/2/11 0011
@@ -220,7 +221,7 @@ public abstract class XYLineChart extends AbstractChart {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect area, Paint paint) {
+    public void draw(Canvas canvas, ChartView parent, Rect area, Paint paint) {
         int[] margins = mRenderer.getmMargins();
         int left = margins[0];
         int top = margins[1];
@@ -239,7 +240,7 @@ public abstract class XYLineChart extends AbstractChart {
         /**
          * 绘制标题
          */
-        textPaint.setTextSize(mRenderer.getmTitleSize());
+        textPaint.setTextSize(mRenderer.getmTitleTextSize());
         textPaint.setColor(mRenderer.getmTitleColor());
         int titleLeft = (int) ((width - textPaint.measureText(mRenderer.getmTitle())) / 2);
         int titleBottom = (int) (top - textPaint.ascent() + textPaint.descent());

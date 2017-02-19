@@ -3,10 +3,12 @@ package com.cbs.engine.chart;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.text.TextPaint;
 
 import com.cbs.engine.renderer.BarChartRenderer;
 import com.cbs.engine.series.LineChartSeries;
+import com.cbs.engine.view.ChartView;
 
 /**
  * date: 2017/2/16 0016
@@ -21,8 +23,8 @@ public class BarChart extends XYLineChart {
     }
 
     @Override
-    public void draw(Canvas canvas, Rect area, Paint paint) {
-        super.draw(canvas, area, paint);
+    public void draw(Canvas canvas, ChartView parent,Rect area, Paint paint) {
+        super.draw(canvas,parent, area, paint);
 
         initSeriesRange();
         validateSeries();
@@ -35,12 +37,30 @@ public class BarChart extends XYLineChart {
         paint.setColor(renderer.getmBarColor());
         paint.setStyle(Paint.Style.FILL);
 
+        /**
+         * 柱体绘制的最大高度
+         */
+        int maxHeight = getEndTickY();
+        /**
+         * 动画处理
+         */
+        if (renderer.isAnimated()) {
+            if (!isAnimatedStart) {
+                mAnimatedStart = SystemClock.uptimeMillis();
+                mAnimatedEnd = mAnimatedStart + renderer.getmAnimatedDuration();
+                isAnimatedStart = true;
+            }
+            maxHeight = getAnimatedValue(renderer.getmAnimatedDuration(),
+                    SystemClock.uptimeMillis() - mAnimatedStart,
+                    getOrigin().y, getEndTickY());
+        }
+
         int barWidth = validateBarWidth(renderer.getmBarWidth());
         Rect rect = new Rect();
         rect.bottom = getOrigin().y;
         int y;
         for (int i=0; i<xValues.length; ++i) {
-            y = (int) convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY());
+            y = (int) convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, maxHeight);
             rect.left = getOrigin().x + (i + 1) * getxGap() - barWidth / 2;
             rect.right = getOrigin().x + (i + 1) * getxGap() + barWidth / 2;
             rect.top = y;
@@ -58,6 +78,10 @@ public class BarChart extends XYLineChart {
                 canvas.drawText(value,baseX,baseY,textPaint);
 
             }
+        }
+
+        if (renderer.isAnimated() && SystemClock.uptimeMillis() <= mAnimatedEnd) {
+            parent.invalidate();
         }
     }
 

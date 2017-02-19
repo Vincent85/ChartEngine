@@ -35,6 +35,7 @@ public class BarChartRenderer extends LineChartRender {
     private int mBarValueTopPadding;
 
     public BarChartRenderer(Context context) {
+        super(context);
         mBarWidth = SystemUtil.dip2px(context, DEFAULT_BAR_WIDTH);
         mBarColor = DEFAULT_BAR_COLOR;
 

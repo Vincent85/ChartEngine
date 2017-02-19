@@ -32,6 +32,7 @@ public class PointChartRenderer extends LineChartRender {
     private int mPointTextPadding;
 
     public PointChartRenderer(Context context) {
+        super(context);
         mRadius = SystemUtil.dip2px(context,DEFAULT_RADIUS);
         mPointTextPadding = SystemUtil.dip2px(context, DEFAULT_POINT_TEXT_PADDING);
         setmValueTextSize((int) SystemUtil.sp2px(context, (float) DEFAULT_VALUE_TEXT_SIZE, SystemUtil.CHINESE));

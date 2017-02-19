@@ -4,10 +4,12 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.os.SystemClock;
 import android.text.TextPaint;
 
 import com.cbs.engine.renderer.PolyLineChartRenderer;
 import com.cbs.engine.series.LineChartSeries;
+import com.cbs.engine.view.ChartView;
 
 /**
  * date: 2017/2/11 0011
@@ -22,13 +24,32 @@ public class PolyLineChart extends XYLineChart{
     }
 
     @Override
-    public void draw(Canvas canvas, Rect area, Paint paint) {
-        super.draw(canvas, area, paint);
+    public void draw(Canvas canvas, ChartView parent,Rect area, Paint paint) {
+        super.draw(canvas, parent,area, paint);
 
         initSeriesRange();
         validateSeries();
 
         PolyLineChartRenderer renderer = (PolyLineChartRenderer) mRenderer;
+
+        /**
+         * x轴最大坐标值
+         *
+         */
+        int maxXCoordinate = getEndX().x - mRenderer.getmGridRightPadding();
+        /**
+         * 是否需要以动画形式展示
+         */
+        if (renderer.isAnimated()) {
+            if (!isAnimatedStart) {
+                mAnimatedStart = SystemClock.uptimeMillis();
+                mAnimatedEnd = mAnimatedStart + renderer.getmAnimatedDuration();
+                isAnimatedStart = true;
+            }
+            maxXCoordinate = getAnimatedValue(renderer.getmAnimatedDuration(),
+                    SystemClock.uptimeMillis() - mAnimatedStart,
+                    getOrigin().x, getEndX().x - renderer.getmGridRightPadding());
+        }
 
         /**
          * 绘制折线段
@@ -37,7 +58,7 @@ public class PolyLineChart extends XYLineChart{
         int x;
         int y;
         Path path = new Path();
-        x = (int) convertToXCoordinate(xValues[0], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding());
+        x = (int) convertToXCoordinate(xValues[0], minX, maxX, getOrigin().x, maxXCoordinate);
         y = (int) convertToYCoordinate(yValues[0], minY, maxY, getOrigin().y, getEndTickY());
         path.moveTo(x,y);
         /**
@@ -53,7 +74,7 @@ public class PolyLineChart extends XYLineChart{
             drawValueText(canvas,x,y,yValues[0] + "",renderer);
         }
         for(int i=1; i<xValues.length; ++i) {
-            x = (int) convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding());
+            x = (int) convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, maxXCoordinate);
             y = (int) convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY());
             path.lineTo(x,y);
         }
@@ -64,7 +85,7 @@ public class PolyLineChart extends XYLineChart{
         canvas.drawPath(path,paint);
 
         for(int i=1; i<xValues.length; ++i) {
-            x = (int) convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, getEndX().x - mRenderer.getmGridRightPadding());
+            x = (int) convertToXCoordinate(xValues[i], minX, maxX, getOrigin().x, maxXCoordinate);
             y = (int) convertToYCoordinate(yValues[i], minY, maxY, getOrigin().y, getEndTickY());
             if (renderer.isValuePointShow()) {
                 drawValuePoint(canvas,x,y,renderer,paint);
@@ -75,6 +96,9 @@ public class PolyLineChart extends XYLineChart{
             if (renderer.isValueTextShow()) {
                 drawValueText(canvas,x,y,yValues[i] + "",renderer);
             }
+        }
+        if (renderer.isAnimated() && SystemClock.uptimeMillis() <= mAnimatedEnd) {
+            parent.invalidate();
         }
     }
 
@@ -102,6 +126,5 @@ public class PolyLineChart extends XYLineChart{
         int baseY = (int) (y - renderer.getmValuePointDimension() / 2 - renderer.getmValueTextPointPadding() - textPaint.descent());
         canvas.drawText(text, baseX, baseY, textPaint);
     }
-
 
 }

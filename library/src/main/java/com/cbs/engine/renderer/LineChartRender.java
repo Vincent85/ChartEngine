@@ -1,5 +1,6 @@
 package com.cbs.engine.renderer;
 
+import android.content.Context;
 import android.graphics.Color;
 
 /**
@@ -115,6 +116,10 @@ public class LineChartRender extends DefaultRenderer {
     private int mValueTextSize;
     private int mValueTextColor;
     private boolean isValueTextShow = true;
+
+    public LineChartRender(Context context) {
+        super(context);
+    }
 
     public String getmXTitle() {
         return mXTitle;

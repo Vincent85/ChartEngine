@@ -75,6 +75,7 @@ public class PieChartRenderer extends DefaultRenderer {
     private int mLabelLineRightPadding;
 
     public PieChartRenderer(Context context) {
+        super(context);
         mRadius = SystemUtil.dip2px(context, DEFAULT_RADIUS);
         mLabelLineLength1 = SystemUtil.dip2px(context,DEFAULT_LABEL_LINE_LENGTH_1);
         mLabelLineLength2 = SystemUtil.dip2px(context, DEFAULT_LABEL_LINE_LENGHT_2);
