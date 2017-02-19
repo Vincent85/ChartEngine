@@ -19,5 +19,5 @@
  *柱状图表 <br />
  ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/barchart-1.gif) <br />
  *饼图
- ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/PieChart.png)
+ ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/PieChart-1.png)
  
