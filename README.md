@@ -1,2 +1,10 @@
 # ChartEngine
-Android chart engine library.
+
+  Android 图表库。当前支持一下几种类型图表：
+ * 点状图表
+ * 折线图表
+ * 柱状图表
+ * 饼图
+ * 支持通过拓展基类增加其他图表类型···
+ 
+ 
