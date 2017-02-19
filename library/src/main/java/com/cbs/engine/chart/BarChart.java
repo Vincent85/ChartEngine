@@ -3,6 +3,7 @@ package com.cbs.engine.chart;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.text.TextPaint;
 
 import com.cbs.engine.renderer.BarChartRenderer;
 import com.cbs.engine.series.LineChartSeries;
@@ -28,12 +29,13 @@ public class BarChart extends XYLineChart {
 
         /**
          * 绘制柱体
+         * 及数值
          */
-        BarChartRenderer render = (BarChartRenderer) mRenderer;
-        paint.setColor(render.getmBarColor());
+        BarChartRenderer renderer = (BarChartRenderer) mRenderer;
+        paint.setColor(renderer.getmBarColor());
         paint.setStyle(Paint.Style.FILL);
 
-        int barWidth = validateBarWidth(render.getmBarWidth());
+        int barWidth = validateBarWidth(renderer.getmBarWidth());
         Rect rect = new Rect();
         rect.bottom = getOrigin().y;
         int y;
@@ -43,6 +45,19 @@ public class BarChart extends XYLineChart {
             rect.right = getOrigin().x + (i + 1) * getxGap() + barWidth / 2;
             rect.top = y;
             canvas.drawRect(rect,paint);
+            /**
+             * 绘制数值文本
+             */
+            if (renderer.isValueTextShow()) {
+                TextPaint textPaint = renderer.getmTextPaint();
+                textPaint.setTextSize(renderer.getmValueTextSize());
+                textPaint.setColor(renderer.getmValueTextColor());
+                String value = yValues[i] + "";
+                int baseX = (int) (((rect.left + rect.right) - textPaint.measureText(value, 0, value.length())) / 2);
+                int baseY = (int)(rect.top - renderer.getmBarValueTopPadding() - textPaint.descent());
+                canvas.drawText(value,baseX,baseY,textPaint);
+
+            }
         }
     }
 

@@ -51,8 +51,8 @@ public class ChartActivity extends Activity {
         return chartView;
     }
     private LineChartSeries generateSeries() {
-        String[] xLabels = new String[]{"1","2","Jan","4","five","6","7","8","9","10","11","12"};
-        String[] yLabels = new String[]{"-30","very cold","-20","-10","0","10","Nice","30","40"};
+        String[] xLabels = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12"};
+        String[] yLabels = new String[]{"0","10","20","30","40","50","60","70","80","90","100"};
         int[] xValues = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};
         int[] yValues = new int[]{12,34,56,34,23,11,6,10,25,67,77,44};
         LineChartSeries series = new LineChartSeries(xValues, yValues, xLabels, yLabels,0,12,0,100);
@@ -74,10 +74,10 @@ public class ChartActivity extends Activity {
     }
 
     private PointChartRenderer generatePointRenderer() {
-        PointChartRenderer render = new PointChartRenderer();
+        PointChartRenderer render = new PointChartRenderer(getApplicationContext());
         render.setApplyBgColor(true);
         render.setmBgColor(Color.BLACK);
-        render.setmTitle("Monthly temperature");
+        render.setmTitle("我是标题");
 
         render.setmXTitle("我是x轴");
         render.setmYTitle("我是y轴");
@@ -88,10 +88,10 @@ public class ChartActivity extends Activity {
     }
 
     private BarChartRenderer generateBarChartRenderer() {
-        BarChartRenderer renderer = new BarChartRenderer();
+        BarChartRenderer renderer = new BarChartRenderer(getApplicationContext());
         renderer.setApplyBgColor(true);
         renderer.setmBgColor(Color.BLACK);
-        renderer.setmTitle("Monthly temperature");
+        renderer.setmTitle("我是标题");
 
         renderer.setmXTitle("我是x轴");
         renderer.setmYTitle("我是y轴");
@@ -110,7 +110,7 @@ public class ChartActivity extends Activity {
 
         renderer.setApplyBgColor(true);
         renderer.setmBgColor(Color.BLACK);
-        renderer.setmTitle("Monthly temperature");
+        renderer.setmTitle("我是标题");
         renderer.setmLegendHeight(SystemUtil.dip2px(this,50));
 //        renderer.setmRadius(SystemUtil.dip2px(this,300));
         renderer.setmStartAngle(-90);

@@ -112,6 +112,10 @@ public class LineChartRender extends DefaultRenderer {
      */
     private int mYLastTickPadding = DEFAULT_Y_LAST_TICK_PADDING;
 
+    private int mValueTextSize;
+    private int mValueTextColor;
+    private boolean isValueTextShow = true;
+
     public String getmXTitle() {
         return mXTitle;
     }
@@ -310,5 +314,32 @@ public class LineChartRender extends DefaultRenderer {
 
     public void setmGridRightPadding(int mGridRightPadding) {
         this.mGridRightPadding = mGridRightPadding;
+    }
+
+
+
+    public boolean isValueTextShow() {
+        return isValueTextShow;
+    }
+
+    public void setValueTextShow(boolean valueTextShow) {
+        isValueTextShow = valueTextShow;
+    }
+
+
+    public int getmValueTextSize() {
+        return mValueTextSize;
+    }
+
+    public void setmValueTextSize(int mValueTextSize) {
+        this.mValueTextSize = mValueTextSize;
+    }
+
+    public int getmValueTextColor() {
+        return mValueTextColor;
+    }
+
+    public void setmValueTextColor(int mValueTextColor) {
+        this.mValueTextColor = mValueTextColor;
     }
 }
