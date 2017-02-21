@@ -22,15 +22,33 @@
  ![](https://github.com/Vincent85/ChartEngine/raw/master/screenshot/PieChart-1.png)  <br />
  
  使用方法：<br />
- * 获取点状图表 <br />
- ```java
- ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
- private LineChartSeries generateSeries() {
-        String[] xLabels = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12"};
-        String[] yLabels = new String[]{"0","10","20","30","40","50","60","70","80","90","100"};
-        int[] xValues = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};
-        int[] yValues = new int[]{12,34,56,34,23,11,6,10,25,0,77,100};
-        LineChartSeries series = new LineChartSeries(xValues, yValues, xLabels, yLabels,0,12,0,100);
-        return series;
-    }
-    ```
+ * 获取点状图表 <br />  
+```java
+ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
+```
+```java
+private LineChartSeries generateSeries() {
+    String[] xLabels = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12"};
+    String[] yLabels = new String[]{"0","10","20","30","40","50","60","70","80","90","100"};
+    int[] xValues = new int[]{1,2,3,4,5,6,7,8,9,10,11,12};
+    int[] yValues = new int[]{12,34,56,34,23,11,6,10,25,0,77,100};
+    LineChartSeries series = new LineChartSeries(xValues, yValues, xLabels, yLabels,0,12,0,100);
+    return series;
+}    
+```
+```java
+private PointChartRenderer generatePointRenderer() {
+    PointChartRenderer render = new PointChartRenderer(getApplicationContext());
+    render.setApplyBgColor(true);
+    render.setmBgColor(Color.BLACK);
+    render.setmTitle("我是标题");
+
+    render.setmXTitle("我是x轴");
+    render.setmYTitle("我是y轴");
+
+    render.setmLegendHeight(SystemUtil.dip2px(this, 90));
+
+    return render;
+}
+```
+* 获取其他类型图表View方法类似，可参考ChartActivity中相关用法。
