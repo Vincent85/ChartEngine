@@ -23,7 +23,8 @@
  
  使用方法：<br />
  * 获取点状图表 <br />
- ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());<br />
+ ```Java
+ ChartView chartView = ChartFactory.getPointChartView(this,generateSeries(),generatePointRenderer());
  private LineChartSeries generateSeries() {
         String[] xLabels = new String[]{"1","2","3","4","5","6","7","8","9","10","11","12"};
         String[] yLabels = new String[]{"0","10","20","30","40","50","60","70","80","90","100"};
@@ -32,3 +33,4 @@
         LineChartSeries series = new LineChartSeries(xValues, yValues, xLabels, yLabels,0,12,0,100);
         return series;
     }
+    ```
